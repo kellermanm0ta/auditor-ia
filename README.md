@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AuditorIA
 
-## Getting Started
+**AuditorIA** é uma plataforma de análise automatizada de repositórios de código utilizando agentes de IA. O sistema orquestra múltiplos agentes especializados para avaliar segurança, arquitetura, qualidade do código, desempenho e dependências de um projeto.
 
-First, run the development server:
+### Funcionalidades
+
+- **Análise multi-agente** — executa agentes de IA especializados em paralelo ou em série
+- **Skills customizáveis** — ative/desative agentes e edite os prompts de cada um
+- **Pipeline visual** — veja e reordene a ordem de execução dos agentes
+- **Histórico de análises** — consulte resultados anteriores com busca
+- **Integrações CI/CD** — conecte com GitHub Actions, GitLab CI, Jenkins, webhooks e CLI
+- **Tema escuro** — interface moderna com Bootstrap 5 em dark mode
+
+### Skills disponíveis
+
+| Skill | Descrição |
+|---|---|
+| Análise de Segurança | Identifica SQL injection, XSS, secrets expostos e OWASP Top 10 |
+| Análise de Arquitetura | Avalia acoplamento, coesão e padrões de projeto |
+| Code Smell | Detecta duplicação, métodos longos e complexidade alta |
+| Análise de Desempenho | Aponta queries N+1, falta de cache e gargalos |
+| Dependências | Verifica versões, vulnerabilidades e licenças |
+
+---
+
+## Pré-requisitos
+
+- **Node.js** versão 18 ou superior
+- **npm** (acompanha o Node.js) ou **yarn** / **pnpm**
+
+## Como executar
+
+### Linux / macOS / Windows (comando único)
 
 ```bash
+# 1. Instalar as dependências
+npm install
+
+# 2. Iniciar o servidor de desenvolvimento
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Abra [http://localhost:3000](http://localhost:3000) no navegador.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Passo a passo (Linux)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Atualizar pacotes (Debian/Ubuntu)
+sudo apt update && sudo apt install nodejs npm -y
 
-## Learn More
+# Verificar versão
+node --version   # deve ser >= 18
 
-To learn more about Next.js, take a look at the following resources:
+# Clonar o projeto e entrar no diretório
+cd auditor-ia
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Instalar dependências
+npm install
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Rodar em modo desenvolvimento
+npm run dev
+```
 
-## Deploy on Vercel
+### Passo a passo (Windows)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Instale o Node.js em [nodejs.org](https://nodejs.org/)
+2. Abra o **PowerShell** ou **Command Prompt**
+3. Navegue até a pasta do projeto:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```powershell
+cd C:\caminho\para\auditor-ia
+```
+
+4. Instale as dependências e inicie:
+
+```powershell
+npm install
+npm run dev
+```
+
+5. Acesse `http://localhost:3000`
+
+### Comandos úteis
+
+| Comando | Descrição |
+|---|---|
+| `npm run dev` | Inicia o servidor de desenvolvimento |
+| `npm run build` | Gera a build de produção |
+| `npm run start` | Inicia o servidor com a build de produção |
+| `npm run lint` | Verifica problemas no código |
+
+## Tecnologias
+
+- **Next.js 16** — framework React com App Router
+- **React 19** — biblioteca de UI
+- **Bootstrap 5.3** — framework CSS (dark theme)
+- **Bootstrap Icons** — ícones
+- **react-markdown** — renderização de markdown
+- **TypeScript** — tipagem estática
+
+## Estrutura do projeto
+
+```
+auditor-ia/
+├── app/
+│   ├── globals.css       # Estilos globais
+│   ├── layout.tsx         # Layout raiz com Bootstrap
+│   └── page.tsx           # Página principal (dashboard)
+├── components/
+│   ├── Sidebar.tsx        # Navegação lateral
+│   ├── TopNavbar.tsx      # Barra superior (mobile)
+│   ├── HomeTab.tsx        # Tela de análise
+│   ├── SkillsTab.tsx      # Gerenciamento de skills
+│   ├── WorkflowTab.tsx    # Pipeline de agentes
+│   ├── HistoryTab.tsx     # Histórico de análises
+│   ├── IntegrationsTab.tsx# Integrações CI/CD
+│   └── ConfigTab.tsx      # Configurações
+├── data/
+│   ├── skills.ts          # Dados mockados das skills
+│   ├── analysis.ts        # Relatório mockado (markdown)
+│   ├── history.ts         # Histórico mockado
+│   └── integrations.ts    # Integrações mockadas
+└── package.json
+```
