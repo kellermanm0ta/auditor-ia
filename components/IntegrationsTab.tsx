@@ -1,14 +1,34 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import { integrationsData } from '@/data/integrations';
+import { useState, useEffect, useCallback } from 'react';
+import type { Integration } from '@/data/integrations';
+import AsyncWrapper from './AsyncWrapper';
 
 function escapeHtml(str: string): string {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 export default function IntegrationsTab() {
+  const [integrations, setIntegrations] = useState<Integration[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('/api/integrations')
+      .then((res) => {
+        if (!res.ok) throw new Error(`Erro ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        setIntegrations(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
 
   const handleCopy = useCallback((id: string, code: string) => {
     navigator.clipboard.writeText(code).then(() => {
@@ -24,51 +44,57 @@ export default function IntegrationsTab() {
         Conecte o AuditorIA ao seu pipeline de CI/CD e outras ferramentas do ecossistema de desenvolvimento.
       </p>
 
-      <div className="row g-3">
-        {integrationsData.map((int) => (
-          <div className="col-md-6 col-lg-4" key={int.id}>
-            <div className="integration-card d-flex flex-column">
-              <div className="d-flex align-items-start gap-3 mb-3">
-                <div className="icon-wrap"><i className={`bi ${int.icon}`}></i></div>
-                <div className="flex-grow-1 min-w-0">
-                  <div className="d-flex align-items-center gap-2">
-                    <h6 className="fw-semibold mb-0">{int.name}</h6>
-                    <span className={`integration-status ${int.status === 'connected' ? 'on' : 'off'}`}></span>
-                    <span className="text-secondary" style={{ fontSize: '11px' }}>{int.statusLabel}</span>
+      <AsyncWrapper
+        loading={loading}
+        error={error}
+        loadingMessage="Carregando integrações..."
+      >
+        <div className="row g-3">
+          {integrations.map((int) => (
+            <div className="col-md-6 col-lg-4" key={int.id}>
+              <div className="integration-card d-flex flex-column">
+                <div className="d-flex align-items-start gap-3 mb-3">
+                  <div className="icon-wrap"><i className={`bi ${int.icon}`}></i></div>
+                  <div className="flex-grow-1 min-w-0">
+                    <div className="d-flex align-items-center gap-2">
+                      <h6 className="fw-semibold mb-0">{int.name}</h6>
+                      <span className={`integration-status ${int.status === 'connected' ? 'on' : 'off'}`}></span>
+                      <span className="text-secondary" style={{ fontSize: '11px' }}>{int.statusLabel}</span>
+                    </div>
+                    <p className="text-secondary mb-0" style={{ fontSize: '12px', marginTop: '2px' }}>{int.desc}</p>
                   </div>
-                  <p className="text-secondary mb-0" style={{ fontSize: '12px', marginTop: '2px' }}>{int.desc}</p>
+                </div>
+
+                <div style={{ fontSize: '12px', color: '#b8b8d8', marginBottom: '8px' }}>
+                  {int.steps.map((step, i) => (
+                    <div className="mb-1" key={i}>
+                      <i className="bi bi-arrow-right-short text-primary"></i> {step}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="code-snippet mb-3 flex-grow-1">{escapeHtml(int.yaml)}</div>
+
+                <div className="d-flex gap-2 mt-auto">
+                  <button className="copy-btn" onClick={() => handleCopy(int.id, int.yaml)}>
+                    {copiedId === int.id ? (
+                      <><i className="bi bi-check-lg me-1"></i>Copiado!</>
+                    ) : (
+                      <><i className="bi bi-clipboard me-1"></i>Copiar</>
+                    )}
+                  </button>
+                  <button className="copy-btn">
+                    <i className="bi bi-box-arrow-up-right me-1"></i>Documentação
+                  </button>
+                  <button className="btn btn-outline-primary btn-sm ms-auto" style={{ fontSize: '12px' }}>
+                    {int.status === 'connected' ? 'Gerenciar' : 'Conectar'}
+                  </button>
                 </div>
               </div>
-
-              <div style={{ fontSize: '12px', color: '#b8b8d8', marginBottom: '8px' }}>
-                {int.steps.map((step, i) => (
-                  <div className="mb-1" key={i}>
-                    <i className="bi bi-arrow-right-short text-primary"></i> {step}
-                  </div>
-                ))}
-              </div>
-
-              <div className="code-snippet mb-3 flex-grow-1">{escapeHtml(int.yaml)}</div>
-
-              <div className="d-flex gap-2 mt-auto">
-                <button className="copy-btn" onClick={() => handleCopy(int.id, int.yaml)}>
-                  {copiedId === int.id ? (
-                    <><i className="bi bi-check-lg me-1"></i>Copiado!</>
-                  ) : (
-                    <><i className="bi bi-clipboard me-1"></i>Copiar</>
-                  )}
-                </button>
-                <button className="copy-btn">
-                  <i className="bi bi-box-arrow-up-right me-1"></i>Documentação
-                </button>
-                <button className="btn btn-outline-primary btn-sm ms-auto" style={{ fontSize: '12px' }}>
-                  {int.status === 'connected' ? 'Gerenciar' : 'Conectar'}
-                </button>
-              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </AsyncWrapper>
     </div>
   );
 }

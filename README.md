@@ -30,6 +30,8 @@
 
 ## Como executar
 
+> **Nota:** A aba Integrações consome dados de uma API REST. Em desenvolvimento, o Next.js faz proxy de `/api/*` para `http://localhost:8000/api/*` (configurado em `next.config.ts`). Certifique-se de que o backend esteja rodando na porta 8000.
+
 ### Linux / macOS / Windows (comando único)
 
 ```bash
@@ -109,16 +111,18 @@ auditor-ia/
 ├── components/
 │   ├── Sidebar.tsx        # Navegação lateral
 │   ├── TopNavbar.tsx      # Barra superior (mobile)
+│   ├── AsyncWrapper.tsx   # Loading/error states reutilizável
 │   ├── HomeTab.tsx        # Tela de análise
 │   ├── SkillsTab.tsx      # Gerenciamento de skills
 │   ├── WorkflowTab.tsx    # Pipeline de agentes
 │   ├── HistoryTab.tsx     # Histórico de análises
-│   ├── IntegrationsTab.tsx# Integrações CI/CD
+│   ├── IntegrationsTab.tsx# Integrações CI/CD (consome API)
 │   └── ConfigTab.tsx      # Configurações
 ├── data/
 │   ├── skills.ts          # Dados mockados das skills
 │   ├── analysis.ts        # Relatório mockado (markdown)
 │   ├── history.ts         # Histórico mockado
-│   └── integrations.ts    # Integrações mockadas
+│   └── integrations.ts    # Tipo das integrações (dados via API)
+├── next.config.ts         # Rewrites de API (proxy em dev)
 └── package.json
 ```

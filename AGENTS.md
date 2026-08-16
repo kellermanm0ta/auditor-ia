@@ -19,8 +19,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 ## Architecture
 - **Single-page dashboard** — no routes. `app/page.tsx` manages a `useState`-driven tab system (`activeTab`). Sidebar links switch tabs, not URLs.
 - **All components are `'use client'`** because every tab has interactivity (toggles, buttons, copy, search).
-- **Static data** lives in `data/*.ts` — plain typed arrays/objects imported directly. No API, no backend.
+- **Most data is static** in `data/*.ts` — plain typed arrays/objects imported directly. Exception: the **Integrations** tab fetches from the backend API.
 - **Path alias**: `@/*` maps to project root (e.g. `@/data/skills`, `@/components/Sidebar`).
+- **API proxy** (dev only): `next.config.ts` rewrites `/api/:path*` → `http://localhost:8000/api/:path*` to avoid CORS. In production, a reverse proxy (Nginx, Caddy, etc.) must route `/api/*` to the backend on port 8000.
 
 ## Styling
 - **Bootstrap 5.3** via `node_modules` imports in `layout.tsx` (includes dark mode via `data-bs-theme`).
@@ -40,7 +41,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 | `skills.ts` | `skillsData` | `Skill[]` |
 | `analysis.ts` | `mockAnalysis` | `string` (markdown) |
 | `history.ts` | `historyData` | `HistoryItem[]` |
-| `integrations.ts` | `integrationsData` | `Integration[]` |
+| `integrations.ts` | `Integration` (type only) | `Integration[]` |
 | `outputFormats.ts` | `outputFormats` | `OutputFormat[]` |
 
 To add new data, create a typed file in `data/` and import it. No service layer, no context provider.
+
+## Reusable components
+- **`AsyncWrapper`** — handles `loading`/`error` states with a spinner or error icon. Used by `IntegrationsTab`. Props: `loading`, `error`, `loadingMessage?`, `errorMessage?`, `children`.
