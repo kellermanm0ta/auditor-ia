@@ -1,38 +1,39 @@
 'use client';
 
 import { useCallback } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 interface NavItem {
   id: string;
   label: string;
   icon: string;
+  to: string;
 }
 
 const navItems: NavItem[] = [
-  { id: 'home', label: 'Home', icon: 'bi-house' },
-  { id: 'skills', label: 'Skills', icon: 'bi-gear' },
-  { id: 'workflow', label: 'Workflow', icon: 'bi-diagram-3' },
-  { id: 'historico', label: 'Histórico', icon: 'bi-clock-history' },
-  { id: 'integracoes', label: 'Integrações', icon: 'bi-puzzle' },
-  { id: 'config', label: 'Configurações', icon: 'bi-sliders' },
+  { id: 'home', label: 'Home', icon: 'bi-house', to: '/' },
+  { id: 'skills', label: 'Skills', icon: 'bi-gear', to: '/skills' },
+  { id: 'workflow', label: 'Workflow', icon: 'bi-diagram-3', to: '/workflow' },
+  { id: 'historico', label: 'Histórico', icon: 'bi-clock-history', to: '/historico' },
+  { id: 'integracoes', label: 'Integrações', icon: 'bi-puzzle', to: '/integracoes' },
+  { id: 'config', label: 'Configurações', icon: 'bi-sliders', to: '/config' },
 ];
 
 interface SidebarProps {
-  activeTab: string;
   collapsed: boolean;
   onToggleSidebar: () => void;
-  onTabChange: (tab: string) => void;
   mobileOpen: boolean;
   onMobileClose: () => void;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
 }
 
-export default function Sidebar({ activeTab, collapsed, onToggleSidebar, onTabChange, mobileOpen, onMobileClose, theme, onToggleTheme }: SidebarProps) {
-  const handleTabClick = useCallback((tabId: string) => {
-    onTabChange(tabId);
+export default function Sidebar({ collapsed, onToggleSidebar, mobileOpen, onMobileClose, theme, onToggleTheme }: SidebarProps) {
+  const location = useLocation();
+
+  const handleNavClick = useCallback(() => {
     onMobileClose();
-  }, [onTabChange, onMobileClose]);
+  }, [onMobileClose]);
 
   return (
     <>
@@ -50,14 +51,14 @@ export default function Sidebar({ activeTab, collapsed, onToggleSidebar, onTabCh
         <ul className="nav flex-column">
           {navItems.map((item) => (
             <li className="nav-item" key={item.id}>
-              <a
-                className={`nav-link ${activeTab === item.id ? 'active' : ''}`}
-                href={`#${item.id}`}
-                onClick={(e) => { e.preventDefault(); handleTabClick(item.id); }}
+              <Link
+                className={`nav-link ${location.pathname === item.to ? 'active' : ''}`}
+                to={item.to}
+                onClick={handleNavClick}
                 role="tab"
               >
                 <i className={`bi ${item.icon}`}></i> <span>{item.label}</span>
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

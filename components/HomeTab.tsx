@@ -1,13 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { mockAnalysis } from '@/data/analysis';
 
 export default function HomeTab() {
   const [loading, setLoading] = useState(false);
   const [showResult, setShowResult] = useState(true);
+  const [mockAnalysis, setMockAnalysis] = useState('');
+
+  useEffect(() => {
+    fetch('/analysis.md')
+      .then((r) => r.text())
+      .then(setMockAnalysis);
+  }, []);
 
   const handleAnalyze = () => {
     setLoading(true);
