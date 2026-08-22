@@ -29,6 +29,19 @@ export interface Integration {
 }
 
 export interface OutputFormat {
+  id: number;
   value: string;
   label: string;
+}
+
+export enum ExecutionMode {
+  Parallel = 'Paralelo',
+  Serial = 'Série',
+}
+
+export interface Config {
+  id: number;
+  executionMode: ExecutionMode;
+  outputFormatId: number;
+  skillIds: string[];
 }
