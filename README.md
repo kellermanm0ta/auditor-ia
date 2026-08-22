@@ -2,6 +2,17 @@
 
 **AuditorIA** é uma plataforma de análise automatizada de repositórios de código utilizando agentes de IA. O sistema orquestra múltiplos agentes especializados para avaliar segurança, arquitetura, qualidade do código, desempenho e dependências de um projeto.
 
+## Repositório da API dependida
+
+As abas **Integrações** e **Config** consomem dados de uma API REST. O repositório dela:
+
+```
+git@github.com:kellermanm0ta/auditor-ia-backend.git
+```
+
+Em desenvolvimento, o Next.js faz proxy de `/api/*` → `http://localhost:8000/api/*` (ver
+`next.config.ts`). Certifique-se de que o backend (e o banco via `auditoria-infra`) esteja rodando.
+
 ### Funcionalidades
 
 - **Análise multi-agente** — executa agentes de IA especializados em paralelo ou em série
