@@ -2,17 +2,11 @@
 
 import AsyncWrapper from './AsyncWrapper';
 import { useOutputFormats } from '@/hooks/useOutputFormats';
-
-const defaultSkills = [
-  { id: 'seguranca', name: 'Análise de Segurança', enabled: true },
-  { id: 'arquitetura', name: 'Análise de Arquitetura', enabled: true },
-  { id: 'codesmell', name: 'Code Smell', enabled: true },
-  { id: 'desempenho', name: 'Análise de Desempenho', enabled: false },
-  { id: 'dependencias', name: 'Dependências', enabled: false },
-];
+import { useSkills } from '@/hooks/useSkills';
 
 export default function ConfigTab() {
-  const { data: outputFormats, error, isLoading } = useOutputFormats();
+  const { data: outputFormats, error: outputError, isLoading: outputLoading } = useOutputFormats();
+  const { data: skills, error: skillsError, isLoading: skillsLoading } = useSkills();
 
   return (
     <div className="tab-pane fade show active" role="tabpanel">
@@ -46,8 +40,8 @@ export default function ConfigTab() {
       </div>
 
       <AsyncWrapper
-        loading={isLoading}
-        error={error?.message ?? null}
+        loading={outputLoading}
+        error={outputError?.message ?? null}
         loadingMessage="Carregando formatos de saída..."
       >
         <div className="card mb-3">
@@ -70,29 +64,35 @@ export default function ConfigTab() {
         </div>
       </AsyncWrapper>
 
-      <div className="card">
-        <div className="card-header">Skills Padrão</div>
-        <div className="card-body">
-          <div className="text-secondary" style={{ fontSize: '13px' }}>
-            Skills que serão habilitadas por padrão em novas análises.
-          </div>
-          <div className="mt-3">
-            {defaultSkills.map((s) => (
-              <div className="form-check form-check-inline" key={s.id}>
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id={`def-${s.id}`}
-                  defaultChecked={s.enabled}
-                />
-                <label className="form-check-label" htmlFor={`def-${s.id}`} style={{ fontSize: '13px' }}>
-                  {s.name}
-                </label>
-              </div>
-            ))}
+      <AsyncWrapper
+        loading={skillsLoading}
+        error={skillsError?.message ?? null}
+        loadingMessage="Carregando skills..."
+      >
+        <div className="card">
+          <div className="card-header">Skills Padrão</div>
+          <div className="card-body">
+            <div className="text-secondary" style={{ fontSize: '13px' }}>
+              Skills que serão habilitadas por padrão em novas análises.
+            </div>
+            <div className="mt-3">
+              {(skills ?? []).map((s) => (
+                <div className="form-check form-check-inline" key={s.id}>
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id={`def-${s.id}`}
+                    defaultChecked={s.enabled}
+                  />
+                  <label className="form-check-label" htmlFor={`def-${s.id}`} style={{ fontSize: '13px' }}>
+                    {s.name}
+                  </label>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      </AsyncWrapper>
     </div>
   );
 }

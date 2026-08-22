@@ -16,6 +16,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - `npm run lint` — ESLint (no type check)
 - No tests exist. No test framework is configured.
 
+
+
 ## Architecture
 - **Single-page dashboard** — no routes. `app/page.tsx` manages a `useState`-driven tab system (`activeTab`). Sidebar links switch tabs, not URLs.
 - **All components are `'use client'`** because every tab has interactivity (toggles, buttons, copy, search).
