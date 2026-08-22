@@ -110,15 +110,22 @@ auditor-ia/
 │   ├── layout.tsx         # Layout raiz com Bootstrap
 │   └── page.tsx           # Página principal (dashboard)
 ├── components/
-│   ├── Sidebar.tsx        # Navegação lateral
-│   ├── TopNavbar.tsx      # Barra superior (mobile)
-│   ├── AsyncWrapper.tsx   # Loading/error states reutilizável
-│   ├── HomeTab.tsx        # Tela de análise
-│   ├── SkillsTab.tsx      # Gerenciamento de skills
-│   ├── WorkflowTab.tsx    # Pipeline de agentes
-│   ├── HistoryTab.tsx     # Histórico de análises
-│   ├── IntegrationsTab.tsx# Integrações CI/CD (consome API)
-│   └── ConfigTab.tsx      # Configurações (consome API)
+│   ├── config/
+│   │   ├── ConfigFormatoSaida.tsx   # Card formato de saída
+│   │   ├── ConfigModoExecucao.tsx   # Card modo de execução
+│   │   └── ConfigSkillsPadrao.tsx   # Card skills padrão
+│   ├── shared/
+│   │   ├── AppTemplate.tsx    # Template de layout
+│   │   ├── AsyncWrapper.tsx   # Loading/error states reutilizável
+│   │   ├── Sidebar.tsx        # Navegação lateral
+│   │   ├── Toast.tsx          # Notificações toast
+│   │   └── TopNavbar.tsx      # Barra superior (mobile)
+│   ├── HomeTab.tsx            # Tela de análise
+│   ├── SkillsTab.tsx          # Gerenciamento de skills
+│   ├── WorkflowTab.tsx        # Pipeline de agentes
+│   ├── HistoryTab.tsx         # Histórico de análises
+│   ├── IntegrationsTab.tsx    # Integrações CI/CD (consome API)
+│   └── ConfigTab.tsx          # Configurações (consome API)
 ├── hooks/
 │   ├── useConfig.ts       # Fetch das configurações (/api/config)
 │   ├── useSkills.ts       # Fetch das skills (/api/skills)
@@ -127,6 +134,7 @@ auditor-ia/
 │   └── useOutputFormats.ts# Fetch dos formatos de saída (/api/output-formats)
 ├── lib/
 │   ├── api.ts             # Fetcher genérico com base /api
+│   ├── routes.tsx         # Rotas do app
 │   └── types.ts           # Tipos TypeScript compartilhados
 ├── data/
 │   ├── skills.ts          # Dados mockados das skills
