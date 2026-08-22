@@ -4,11 +4,12 @@ import { useState, useCallback, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from '@/components/shared/Sidebar';
 import TopNavbar from '@/components/shared/TopNavbar';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 export default function AppTemplate() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useLocalStorage('sidebar-collapsed', false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const [theme, setTheme] = useLocalStorage<'light' | 'dark'>('theme', 'dark');
 
   useEffect(() => {
     document.documentElement.setAttribute('data-bs-theme', theme);
