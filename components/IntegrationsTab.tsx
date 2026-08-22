@@ -1,34 +1,17 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import type { Integration } from '@/data/integrations';
+import { useState, useCallback } from 'react';
+import type { Integration } from '@/lib/types';
 import AsyncWrapper from './AsyncWrapper';
+import { useIntegrations } from '@/hooks/useIntegrations';
 
 function escapeHtml(str: string): string {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 export default function IntegrationsTab() {
-  const [integrations, setIntegrations] = useState<Integration[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: integrations, error, isLoading } = useIntegrations();
   const [copiedId, setCopiedId] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch('/api/integrations')
-      .then((res) => {
-        if (!res.ok) throw new Error(`Erro ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        setIntegrations(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
 
   const handleCopy = useCallback((id: string, code: string) => {
     navigator.clipboard.writeText(code).then(() => {
@@ -45,12 +28,12 @@ export default function IntegrationsTab() {
       </p>
 
       <AsyncWrapper
-        loading={loading}
-        error={error}
+        loading={isLoading}
+        error={error?.message ?? null}
         loadingMessage="Carregando integrações..."
       >
         <div className="row g-3">
-          {integrations.map((int) => (
+          {(integrations ?? []).map((int) => (
             <div className="col-md-6 col-lg-4" key={int.id}>
               <div className="integration-card d-flex flex-column">
                 <div className="d-flex align-items-start gap-3 mb-3">

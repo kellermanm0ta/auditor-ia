@@ -1,9 +1,19 @@
 'use client';
 
-import { skillsData } from '@/data/skills';
-import { outputFormats } from '@/data/outputFormats';
+import AsyncWrapper from './AsyncWrapper';
+import { useOutputFormats } from '@/hooks/useOutputFormats';
+
+const defaultSkills = [
+  { id: 'seguranca', name: 'Análise de Segurança', enabled: true },
+  { id: 'arquitetura', name: 'Análise de Arquitetura', enabled: true },
+  { id: 'codesmell', name: 'Code Smell', enabled: true },
+  { id: 'desempenho', name: 'Análise de Desempenho', enabled: false },
+  { id: 'dependencias', name: 'Dependências', enabled: false },
+];
 
 export default function ConfigTab() {
+  const { data: outputFormats, error, isLoading } = useOutputFormats();
+
   return (
     <div className="tab-pane fade show active" role="tabpanel">
       <h4 className="mb-1 fw-bold">Configurações</h4>
@@ -35,24 +45,30 @@ export default function ConfigTab() {
         </div>
       </div>
 
-      <div className="card mb-3">
-        <div className="card-header">Formato de Saída</div>
-        <div className="card-body">
-          <div className="d-flex align-items-center justify-content-between">
-            <div>
-              <div className="fw-semibold">Formato padrão do relatório</div>
-              <div className="text-secondary" style={{ fontSize: '13px' }}>
-                Como o resultado da análise deve ser apresentado.
+      <AsyncWrapper
+        loading={isLoading}
+        error={error?.message ?? null}
+        loadingMessage="Carregando formatos de saída..."
+      >
+        <div className="card mb-3">
+          <div className="card-header">Formato de Saída</div>
+          <div className="card-body">
+            <div className="d-flex align-items-center justify-content-between">
+              <div>
+                <div className="fw-semibold">Formato padrão do relatório</div>
+                <div className="text-secondary" style={{ fontSize: '13px' }}>
+                  Como o resultado da análise deve ser apresentado.
+                </div>
               </div>
+              <select className="form-select form-select-sm w-auto" id="outputFormat" defaultValue="markdown">
+                {(outputFormats ?? []).map((fmt) => (
+                  <option key={fmt.value} value={fmt.value}>{fmt.label}</option>
+                ))}
+              </select>
             </div>
-            <select className="form-select form-select-sm w-auto" id="outputFormat" defaultValue="markdown">
-              {outputFormats.map((fmt) => (
-                <option key={fmt.value} value={fmt.value}>{fmt.label}</option>
-              ))}
-            </select>
           </div>
         </div>
-      </div>
+      </AsyncWrapper>
 
       <div className="card">
         <div className="card-header">Skills Padrão</div>
@@ -61,7 +77,7 @@ export default function ConfigTab() {
             Skills que serão habilitadas por padrão em novas análises.
           </div>
           <div className="mt-3">
-            {skillsData.map((s) => (
+            {defaultSkills.map((s) => (
               <div className="form-check form-check-inline" key={s.id}>
                 <input
                   className="form-check-input"

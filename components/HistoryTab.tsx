@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { historyData } from '@/data/history';
+import type { HistoryItem } from '@/lib/types';
+import AsyncWrapper from './AsyncWrapper';
+import { useHistory } from '@/hooks/useHistory';
 
 function severityBadgeClass(severity: string): string {
   if (severity === 'Crítico' || severity === 'Alto') return 'danger';
@@ -16,9 +18,10 @@ function severityBorderClass(severity: string): string {
 }
 
 export default function HistoryTab() {
+  const { data: history, error, isLoading } = useHistory();
   const [search, setSearch] = useState('');
 
-  const filtered = historyData.filter((h) =>
+  const filtered = (history ?? []).filter((h: HistoryItem) =>
     h.repo.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -43,7 +46,12 @@ export default function HistoryTab() {
         />
       </div>
 
-      {filtered.map((h, idx) => (
+      <AsyncWrapper
+        loading={isLoading}
+        error={error?.message ?? null}
+        loadingMessage="Carregando histórico..."
+      >
+        {filtered.map((h, idx) => (
         <div
           className="history-item d-flex align-items-center justify-content-between flex-wrap gap-2"
           key={idx}
@@ -67,6 +75,7 @@ export default function HistoryTab() {
           </div>
         </div>
       ))}
+      </AsyncWrapper>
     </div>
   );
 }

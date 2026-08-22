@@ -1,14 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import { skillsData, type Skill } from '@/data/skills';
+import type { Skill } from '@/lib/types';
+import AsyncWrapper from './AsyncWrapper';
+import { useSkills } from '@/hooks/useSkills';
 
 export default function SkillsTab() {
-  const [skills, setSkills] = useState<Skill[]>(skillsData);
+  const { data: skills, error, isLoading } = useSkills();
+  const [local, setLocal] = useState<Skill[] | null>(null);
+
+  const list = local ?? skills ?? [];
 
   const toggleSkill = (id: string) => {
-    setSkills((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, enabled: !s.enabled } : s))
+    setLocal((prev) =>
+      (prev ?? skills ?? []).map((s) =>
+        s.id === id ? { ...s, enabled: !s.enabled } : s
+      )
     );
   };
 
@@ -26,7 +33,12 @@ export default function SkillsTab() {
         </button>
       </div>
 
-      {skills.map((skill) => (
+      <AsyncWrapper
+        loading={isLoading}
+        error={error?.message ?? null}
+        loadingMessage="Carregando skills..."
+      >
+        {list.map((skill) => (
         <div className="card mb-2" key={skill.id}>
           <div className="card-body">
             <div className="d-flex align-items-start gap-3">
@@ -60,6 +72,7 @@ export default function SkillsTab() {
           </div>
         </div>
       ))}
+      </AsyncWrapper>
     </div>
   );
 }
