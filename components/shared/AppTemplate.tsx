@@ -2,8 +2,8 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import Sidebar from '@/components/Sidebar';
-import TopNavbar from '@/components/TopNavbar';
+import Sidebar from '@/components/shared/Sidebar';
+import TopNavbar from '@/components/shared/TopNavbar';
 
 export default function AppTemplate() {
   const [collapsed, setCollapsed] = useState(false);

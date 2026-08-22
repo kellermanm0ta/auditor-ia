@@ -35,8 +35,8 @@ export interface OutputFormat {
 }
 
 export enum ExecutionMode {
-  Parallel = 'Paralelo',
-  Serial = 'Série',
+  PARALELO = 'PARALELO',
+  SERIE = 'SERIE',
 }
 
 export interface Config {

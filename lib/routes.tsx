@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import AppTemplate from '@/components/AppTemplate';
+import AppTemplate from '@/components/shared/AppTemplate';
 import HomeTab from '@/components/HomeTab';
 import SkillsTab from '@/components/SkillsTab';
 import WorkflowTab from '@/components/WorkflowTab';

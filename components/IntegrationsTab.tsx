@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import type { Integration } from '@/lib/types';
-import AsyncWrapper from './AsyncWrapper';
+import AsyncWrapper from './shared/AsyncWrapper';
 import { useIntegrations } from '@/hooks/useIntegrations';
 
 function escapeHtml(str: string): string {

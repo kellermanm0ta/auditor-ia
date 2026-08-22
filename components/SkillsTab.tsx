@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import type { Skill } from '@/lib/types';
-import AsyncWrapper from './AsyncWrapper';
+import AsyncWrapper from './shared/AsyncWrapper';
 import { useSkills } from '@/hooks/useSkills';
 
 export default function SkillsTab() {

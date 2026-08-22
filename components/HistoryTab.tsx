@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import type { HistoryItem } from '@/lib/types';
-import AsyncWrapper from './AsyncWrapper';
+import AsyncWrapper from './shared/AsyncWrapper';
 import { useHistory } from '@/hooks/useHistory';
 
 function severityBadgeClass(severity: string): string {
