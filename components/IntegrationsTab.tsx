@@ -37,7 +37,7 @@ export default function IntegrationsTab() {
             <div className="col-md-6 col-lg-4" key={int.id}>
               <div className="integration-card d-flex flex-column">
                 <div className="d-flex align-items-start gap-3 mb-3">
-                  <div className="icon-wrap"><i className={`bi ${int.icon}`}></i></div>
+                  <div className="icon-wrap"><i className={`${int.icon}`}></i></div>
                   <div className="flex-grow-1 min-w-0">
                     <div className="d-flex align-items-center gap-2">
                       <h6 className="fw-semibold mb-0">{int.name}</h6>
