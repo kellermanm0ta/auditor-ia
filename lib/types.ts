@@ -28,6 +28,14 @@ export interface Integration {
   yaml: string;
 }
 
+export interface WorkflowAgent {
+  id: number;
+  nome: string;
+  dependeDe: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface OutputFormat {
   id: number;
   value: string;
