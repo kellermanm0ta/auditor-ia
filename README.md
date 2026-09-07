@@ -17,7 +17,7 @@ Em desenvolvimento, o Next.js faz proxy de `/api/*` → `http://localhost:8000/a
 
 - **Análise multi-agente** — executa agentes de IA especializados em paralelo ou em série
 - **Skills customizáveis** — ative/desative agentes e edite os prompts de cada um
-- **Pipeline visual** — veja e reordene a ordem de execução dos agentes
+- **Pipeline visual** — grafo interativo de agentes com arrasto, edição e exclusão de nós
 - **Histórico de análises** — consulte resultados anteriores com busca
 - **Integrações CI/CD** — conecte com GitHub Actions, GitLab CI, Jenkins, webhooks e CLI
 - **Tema escuro** — interface moderna com Bootstrap 5 em dark mode
@@ -110,6 +110,7 @@ npm run dev
 - **Bootstrap Icons** — ícones
 - **react-markdown** — renderização de markdown
 - **SWR** — data fetching e cache (stale-while-revalidate)
+- **@xyflow/react** — grafo de workflow interativo (drag, zoom, nós customizados)
 - **TypeScript** — tipagem estática
 
 ## Estrutura do projeto
@@ -128,25 +129,33 @@ auditor-ia/
 │   ├── shared/
 │   │   ├── AppTemplate.tsx    # Template de layout
 │   │   ├── AsyncWrapper.tsx   # Loading/error states reutilizável
+│   │   ├── ConfirmModal.tsx   # Modal de confirmação genérico
 │   │   ├── Sidebar.tsx        # Navegação lateral
 │   │   ├── Toast.tsx          # Notificações toast
 │   │   └── TopNavbar.tsx      # Barra superior (mobile)
+│   ├── workflow/
+│   │   ├── AgentModal.tsx         # Modal de criação/edição de agente
+│   │   ├── WorkflowAgentNode.tsx  # Nó customizado do ReactFlow
+│   │   ├── WorkflowFlow.tsx       # Grafo ReactFlow com layout
+│   │   ├── WorkflowFlowContext.tsx # Contexto para ações do nó
+│   │   └── WorkflowTab.tsx        # Aba de orquestração (ponto de entrada)
 │   ├── HomeTab.tsx            # Tela de análise
 │   ├── SkillsTab.tsx          # Gerenciamento de skills
-│   ├── WorkflowTab.tsx        # Pipeline de agentes
 │   ├── HistoryTab.tsx         # Histórico de análises
 │   ├── IntegrationsTab.tsx    # Integrações CI/CD (consome API)
 │   └── ConfigTab.tsx          # Configurações (consome API)
 ├── hooks/
-│   ├── useConfig.ts       # Fetch das configurações (/api/config)
-│   ├── useSkills.ts       # Fetch das skills (/api/skills)
-│   ├── useHistory.ts      # Fetch do histórico (/api/history)
-│   ├── useIntegrations.ts # Fetch das integrações (/api/integrations)
-│   └── useOutputFormats.ts# Fetch dos formatos de saída (/api/output-formats)
+│   ├── useConfig.ts           # Fetch das configurações (/api/config)
+│   ├── useSkills.ts           # Fetch das skills (/api/skills)
+│   ├── useHistory.ts          # Fetch do histórico (/api/history)
+│   ├── useIntegrations.ts     # Fetch das integrações (/api/integrations)
+│   ├── useOutputFormats.ts    # Fetch dos formatos de saída (/api/output-formats)
+│   └── useWorkflowAgents.ts   # Fetch + CRUD de agentes (/api/workflow-agents)
 ├── lib/
-│   ├── api.ts             # Fetcher genérico com base /api
-│   ├── routes.tsx         # Rotas do app
-│   └── types.ts           # Tipos TypeScript compartilhados
+│   ├── api.ts                 # Fetcher/Putter/Poster/Deleter genéricos
+│   ├── routes.tsx             # Rotas do app
+│   ├── types.ts               # Tipos TypeScript compartilhados
+│   └── workflowLayout.ts      # Conversão de agentes → nós/arestas ReactFlow
 ├── data/
 │   ├── skills.ts          # Dados mockados das skills
 │   ├── analysis.ts        # Relatório mockado (markdown)

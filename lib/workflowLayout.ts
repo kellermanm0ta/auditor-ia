@@ -32,7 +32,7 @@ export function buildFlow(agents: WorkflowAgent[]): { nodes: Node[]; edges: Edge
       id: String(nodeId),
       type: 'workflowAgent',
       position: { x, y },
-      data: { nome: agent.nome, stepNumber: step, color },
+      data: { nome: agent.nome, stepNumber: step, color, agentId: agent.id },
       draggable: true,
     });
 
