@@ -64,7 +64,7 @@ export default function SkillsTab() {
       />
       <div className="d-flex align-items-center justify-content-between mb-3">
         <div>
-          <h4 className="mb-1 fw-bold">Skills dos Agentes</h4>
+          <h4 className="mb-1 fw-bold"><i className="bi bi-gear"></i>&nbsp; Skills dos Agentes</h4>
           <p className="text-secondary mb-0" style={{ fontSize: '14px' }}>
             Ative ou desative skills e refine os prompts utilizados na análise.
           </p>
@@ -85,30 +85,38 @@ export default function SkillsTab() {
             <div className="d-flex align-items-start gap-3">
               <i className={`bi ${skill.icon}`} style={{ fontSize: '20px', color: '#6c5ce7', marginTop: '2px' }}></i>
               <div className="flex-grow-1">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div>
-                    <span className="fw-semibold">{skill.name}</span>
-                    <span className="badge badge-agent ms-2 small">{skill.id}</span>
-                  </div>
-                  <div className="form-check form-switch">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      checked={skill.enabled}
-                      onChange={() => toggleSkill(skill)}
-                    />
+                <div className="d-flex align-items-center gap-2">
+                  <span className="fw-semibold">{skill.name}</span>
+                  <div className="d-flex align-items-center gap-2 ms-auto">
+                    <button
+                      className="btn btn-sm p-0"
+                      style={{ color: 'var(--text-secondary, #8b8ba7)', fontSize: '13px', lineHeight: 1 }}
+                      onClick={() => handleEdit(skill)}
+                      title="Editar"
+                    >
+                      <i className="bi bi-pencil"></i>
+                    </button>
+                    <button
+                      className="btn btn-sm p-0"
+                      style={{ color: '#ff4757', fontSize: '13px', lineHeight: 1 }}
+                      onClick={() => handleDelete(skill)}
+                      title="Excluir"
+                    >
+                      <i className="bi bi-trash"></i>
+                    </button>
+                    <div className="form-check form-switch mb-0">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        checked={skill.enabled}
+                        onChange={() => toggleSkill(skill)}
+                        title={skill.enabled ? 'Desabilitar' : 'Habilitar'}
+                      />
+                    </div>
                   </div>
                 </div>
-                <p className="text-secondary mb-2" style={{ fontSize: '13px' }}>{skill.desc}</p>
-                <div className="d-flex justify-content-end gap-2">
-                  <button className="btn btn-outline-primary btn-sm" onClick={() => handleEdit(skill)}>
-                    <i className="bi bi-pencil me-1"></i> Editar
-                  </button>
-                  <button className="btn btn-outline-danger btn-sm" onClick={() => handleDelete(skill)}>
-                    <i className="bi bi-trash me-1"></i> Excluir
-                  </button>
-                </div>
+                <p className="text-secondary mb-0 mt-1" style={{ fontSize: '13px' }}>{skill.desc}</p>
               </div>
             </div>
           </div>

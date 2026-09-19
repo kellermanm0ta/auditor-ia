@@ -33,7 +33,7 @@ export default function ConfigTab() {
         message="Configuração atualizada com sucesso!"
         onClose={() => setToast(false)}
       />
-      <h4 className="mb-1 fw-bold">Configurações</h4>
+      <h4 className="mb-1 fw-bold"><i className="bi bi-sliders"></i>&nbsp; Configurações</h4>
       <p className="text-secondary mb-4" style={{ fontSize: '14px' }}>
         Ajuste o comportamento geral da plataforma.
       </p>

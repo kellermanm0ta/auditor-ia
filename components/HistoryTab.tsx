@@ -27,7 +27,7 @@ export default function HistoryTab() {
 
   return (
     <div className="tab-pane fade show active" role="tabpanel">
-      <h4 className="mb-1 fw-bold">Histórico de Análises</h4>
+      <h4 className="mb-1 fw-bold"><i className="bi bi-clock-history"></i>&nbsp; Histórico de Análises</h4>
       <p className="text-secondary mb-4" style={{ fontSize: '14px' }}>
         Visualize análises anteriores realizadas pela plataforma.
       </p>

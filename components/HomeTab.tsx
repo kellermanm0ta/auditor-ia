@@ -27,7 +27,7 @@ export default function HomeTab() {
 
   return (
     <div className="tab-pane fade show active" role="tabpanel">
-      <h4 className="mb-1 fw-bold">Analisar Repositório</h4>
+      <h4 className="mb-1 fw-bold"><i className="bi bi-house"></i>&nbsp; Analisar Repositório</h4>
       <p className="text-secondary mb-4" style={{ fontSize: '14px' }}>
         Insira o link do repositório para iniciar uma análise automatizada com agentes de IA.
       </p>

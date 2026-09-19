@@ -22,7 +22,7 @@ export default function IntegrationsTab() {
 
   return (
     <div className="tab-pane fade show active" role="tabpanel">
-      <h4 className="mb-1 fw-bold">Integrações</h4>
+      <h4 className="mb-1 fw-bold"><i className="bi bi-puzzle"></i>&nbsp; Integrações</h4>
       <p className="text-secondary mb-4" style={{ fontSize: '14px' }}>
         Conecte o AuditorIA ao seu pipeline de CI/CD e outras ferramentas do ecossistema de desenvolvimento.
       </p>

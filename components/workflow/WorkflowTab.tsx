@@ -64,7 +64,7 @@ export default function WorkflowTab() {
 
   return (
     <div className="tab-pane fade show active" role="tabpanel">
-      <h4 className="mb-1 fw-bold">Orquestração de Agentes</h4>
+      <h4 className="mb-1 fw-bold"><i className="bi bi-diagram-3"></i>&nbsp; Orquestração de Agentes</h4>
       <p className="text-secondary mb-4" style={{ fontSize: '14px' }}>
         Defina a ordem de execução dos agentes e como eles se encadeiam.
       </p>
