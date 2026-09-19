@@ -4,8 +4,8 @@ import type { OutputFormat } from '@/lib/types';
 
 interface ConfigFormatoSaidaProps {
   outputFormats: OutputFormat[] | undefined;
-  outputFormatId: number | undefined;
-  onOutputFormat: (id: number) => void;
+  outputFormatId: string | undefined;
+  onOutputFormat: (id: string) => void;
 }
 
 export default function ConfigFormatoSaida({
@@ -28,7 +28,7 @@ export default function ConfigFormatoSaida({
             className="form-select form-select-sm w-auto"
             id="outputFormat"
             value={outputFormatId ?? ''}
-            onChange={(e) => onOutputFormat(Number(e.target.value))}
+            onChange={(e) => onOutputFormat(e.target.value)}
           >
             {(outputFormats ?? []).map((fmt) => (
               <option key={fmt.value} value={fmt.id}>{fmt.label}</option>

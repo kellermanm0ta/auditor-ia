@@ -16,9 +16,9 @@ const nodeTypes = { workflowAgent: WorkflowAgentNode };
 
 interface FlowProps {
   agents: WorkflowAgent[];
-  onEditAgent: (id: number) => void;
-  onDeleteAgent: (id: number) => void;
-  onAddChildAgent: (id: number) => void;
+  onEditAgent: (id: string) => void;
+  onDeleteAgent: (id: string) => void;
+  onAddChildAgent: (id: string) => void;
 }
 
 export default function WorkflowFlow({ agents, onEditAgent, onDeleteAgent, onAddChildAgent }: FlowProps) {

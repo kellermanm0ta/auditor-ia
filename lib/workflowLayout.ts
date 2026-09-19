@@ -10,7 +10,7 @@ const nodeColors = [
 export function buildFlow(agents: WorkflowAgent[]): { nodes: Node[]; edges: Edge[] } {
   if (agents.length === 0) return { nodes: [], edges: [] };
 
-  const childrenMap = new Map<number | null, number[]>();
+  const childrenMap = new Map<string | null, string[]>();
   for (const a of agents) {
     const key = a.dependeDe;
     if (!childrenMap.has(key)) childrenMap.set(key, []);
@@ -24,7 +24,7 @@ export function buildFlow(agents: WorkflowAgent[]): { nodes: Node[]; edges: Edge
   const edges: Edge[] = [];
   let step = 0;
 
-  function assign(nodeId: number, x: number, y: number, xOffset: number) {
+  function assign(nodeId: string, x: number, y: number, xOffset: number) {
     const agent = byId.get(nodeId)!;
     step++;
     const color = nodeColors[(step - 1) % nodeColors.length];
@@ -32,7 +32,7 @@ export function buildFlow(agents: WorkflowAgent[]): { nodes: Node[]; edges: Edge
       id: String(nodeId),
       type: 'workflowAgent',
       position: { x, y },
-      data: { nome: agent.nome, stepNumber: step, color, agentId: agent.id },
+      data: { nome: agent.nome, stepNumber: step, color, agentId: agent.id, isRoot: agent.id === root.id },
       draggable: true,
     });
 

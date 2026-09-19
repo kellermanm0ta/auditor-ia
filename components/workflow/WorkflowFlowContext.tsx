@@ -3,9 +3,9 @@
 import { createContext, useContext } from 'react';
 
 interface FlowContextValue {
-  onEditAgent: (id: number) => void;
-  onDeleteAgent: (id: number) => void;
-  onAddChildAgent: (id: number) => void;
+  onEditAgent: (id: string) => void;
+  onDeleteAgent: (id: string) => void;
+  onAddChildAgent: (id: string) => void;
 }
 
 const WorkflowFlowContext = createContext<FlowContextValue | null>(null);

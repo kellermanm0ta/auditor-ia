@@ -4,7 +4,8 @@
 
 ## Repositório da API dependida
 
-As abas **Integrações** e **Config** consomem dados de uma API REST. O repositório dela:
+Todas as abas consomem dados de uma API REST (skills, workflow, histórico, integrações,
+configurações e formatos de saída). O repositório dela:
 
 ```
 git@github.com:kellermanm0ta/auditor-ia-backend.git
@@ -13,10 +14,14 @@ git@github.com:kellermanm0ta/auditor-ia-backend.git
 Em desenvolvimento, o Next.js faz proxy de `/api/*` → `http://localhost:8000/api/*` (ver
 `next.config.ts`). Certifique-se de que o backend (e o banco via `auditoria-infra`) esteja rodando.
 
+> **IDs:** todos os identificadores (e chaves estrangeiras como `dependeDe` e `outputFormatId`)
+> são `string` geradas pelo backend. Ao criar registros, **omita o `id`** do corpo da requisição —
+> o backend gera e devolve o id no response.
+
 ### Funcionalidades
 
 - **Análise multi-agente** — executa agentes de IA especializados em paralelo ou em série
-- **Skills customizáveis** — ative/desative agentes e edite os prompts de cada um
+- **Skills customizáveis** — crie, edite e exclua skills, ative/desative cada uma e escreva prompts em Markdown com visualização renderizada
 - **Pipeline visual** — grafo interativo de agentes com arrasto, edição e exclusão de nós
 - **Histórico de análises** — consulte resultados anteriores com busca
 - **Integrações CI/CD** — conecte com GitHub Actions, GitLab CI, Jenkins, webhooks e CLI
@@ -41,7 +46,7 @@ Em desenvolvimento, o Next.js faz proxy de `/api/*` → `http://localhost:8000/a
 
 ## Como executar
 
-> **Nota:** As abas Integrações e Config consomem dados de uma API REST. Em desenvolvimento, o Next.js faz proxy de `/api/*` para `http://localhost:8000/api/*` (configurado em `next.config.ts`). Certifique-se de que o backend esteja rodando na porta 8000.
+> **Nota:** Todas as abas consomem dados de uma API REST. Em desenvolvimento, o Next.js faz proxy de `/api/*` para `http://localhost:8000/api/*` (configurado em `next.config.ts`). Certifique-se de que o backend esteja rodando na porta 8000.
 
 ### Linux / macOS / Windows (comando único)
 
@@ -118,9 +123,10 @@ npm run dev
 ```
 auditor-ia/
 ├── app/
-│   ├── globals.css       # Estilos globais
-│   ├── layout.tsx         # Layout raiz com Bootstrap
-│   └── page.tsx           # Página principal (dashboard)
+│   ├── [[...slug]]/
+│   │   └── page.tsx       # Entrada que monta o react-router
+│   ├── globals.css        # Estilos globais
+│   └── layout.tsx         # Layout raiz com Bootstrap
 ├── components/
 │   ├── config/
 │   │   ├── ConfigFormatoSaida.tsx   # Card formato de saída
@@ -140,26 +146,26 @@ auditor-ia/
 │   │   ├── WorkflowFlowContext.tsx # Contexto para ações do nó
 │   │   └── WorkflowTab.tsx        # Aba de orquestração (ponto de entrada)
 │   ├── HomeTab.tsx            # Tela de análise
-│   ├── SkillsTab.tsx          # Gerenciamento de skills
+│   ├── SkillsTab.tsx          # Gerenciamento de skills (CRUD)
+│   ├── SkillModal.tsx         # Modal de criação/edição de skill (abas Principal/Prompt)
 │   ├── HistoryTab.tsx         # Histórico de análises
-│   ├── IntegrationsTab.tsx    # Integrações CI/CD (consome API)
-│   └── ConfigTab.tsx          # Configurações (consome API)
+│   ├── IntegrationsTab.tsx    # Integrações CI/CD
+│   └── ConfigTab.tsx          # Configurações
 ├── hooks/
-│   ├── useConfig.ts           # Fetch das configurações (/api/config)
-│   ├── useSkills.ts           # Fetch das skills (/api/skills)
+│   ├── useConfig.ts           # Fetch + update das configurações (/api/config)
+│   ├── useSkills.ts           # Fetch + CRUD das skills (/api/skills)
 │   ├── useHistory.ts          # Fetch do histórico (/api/history)
 │   ├── useIntegrations.ts     # Fetch das integrações (/api/integrations)
+│   ├── useLocalStorage.ts     # Estado persistido em localStorage
 │   ├── useOutputFormats.ts    # Fetch dos formatos de saída (/api/output-formats)
 │   └── useWorkflowAgents.ts   # Fetch + CRUD de agentes (/api/workflow-agents)
 ├── lib/
 │   ├── api.ts                 # Fetcher/Putter/Poster/Deleter genéricos
-│   ├── routes.tsx             # Rotas do app
+│   ├── routes.tsx             # Rotas do app (react-router)
 │   ├── types.ts               # Tipos TypeScript compartilhados
 │   └── workflowLayout.ts      # Conversão de agentes → nós/arestas ReactFlow
-├── data/
-│   ├── skills.ts          # Dados mockados das skills
-│   ├── analysis.ts        # Relatório mockado (markdown)
-│   └── history.ts         # Histórico mockado
+├── public/
+│   └── analysis.md            # Relatório de exemplo (markdown)
 ├── next.config.ts         # Rewrites de API (proxy em dev)
 └── package.json
 ```

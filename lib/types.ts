@@ -8,15 +8,17 @@ export interface Skill {
 }
 
 export type SkillInput = Omit<Skill, 'id'>;
-export type SkillCreateInput = Skill;
+export type SkillCreateInput = Omit<Skill, 'id'>;
 
 export interface HistoryItem {
+  id: string;
   repo: string;
   date: string;
   issues: number;
   severity: string;
   agents: number;
   time: string;
+  createdAt: string;
 }
 
 export interface Integration {
@@ -32,15 +34,15 @@ export interface Integration {
 }
 
 export interface WorkflowAgent {
-  id: number;
+  id: string;
   nome: string;
-  dependeDe: number | null;
+  dependeDe: string | null;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface OutputFormat {
-  id: number;
+  id: string;
   value: string;
   label: string;
 }
@@ -51,8 +53,8 @@ export enum ExecutionMode {
 }
 
 export interface Config {
-  id: number;
+  id: string;
   executionMode: ExecutionMode;
-  outputFormatId: number;
+  outputFormatId: string;
   skillIds: string[];
 }

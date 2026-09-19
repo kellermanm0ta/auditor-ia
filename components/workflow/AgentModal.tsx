@@ -7,11 +7,11 @@ interface AgentModalProps {
   show: boolean;
   agents: WorkflowAgent[];
   editingAgent: WorkflowAgent | null;
-  parentAgentId?: number | null;
+  parentAgentId?: string | null;
   onClose: () => void;
   onSaved: () => void;
-  createAgent: (nome: string, dependeDe: number | null) => Promise<WorkflowAgent>;
-  updateAgent: (id: number, nome: string, dependeDe: number | null) => Promise<WorkflowAgent>;
+  createAgent: (nome: string, dependeDe: string | null) => Promise<WorkflowAgent>;
+  updateAgent: (id: string, nome: string, dependeDe: string | null) => Promise<WorkflowAgent>;
 }
 
 export default function AgentModal({ show, agents, editingAgent, parentAgentId, onClose, onSaved, createAgent, updateAgent }: AgentModalProps) {
@@ -25,7 +25,7 @@ export default function AgentModal({ show, agents, editingAgent, parentAgentId, 
   useEffect(() => {
     if (show) {
       setNome(editingAgent?.nome ?? '');
-      setDependeDe(editingAgent?.dependeDe != null ? String(editingAgent.dependeDe) : parentAgentId != null ? String(parentAgentId) : '');
+      setDependeDe(editingAgent?.dependeDe ?? parentAgentId ?? '');
       setError(null);
     }
   }, [show, editingAgent, parentAgentId]);
@@ -39,9 +39,9 @@ export default function AgentModal({ show, agents, editingAgent, parentAgentId, 
     setError(null);
     try {
       if (isEditing) {
-        await updateAgent(editingAgent!.id, nome.trim(), dependeDe ? Number(dependeDe) : null);
+        await updateAgent(editingAgent!.id, nome.trim(), dependeDe || null);
       } else {
-        await createAgent(nome.trim(), Number(dependeDe));
+        await createAgent(nome.trim(), dependeDe);
       }
       onSaved();
     } catch (e) {

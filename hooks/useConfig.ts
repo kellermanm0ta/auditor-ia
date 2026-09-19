@@ -21,7 +21,7 @@ export function useConfig() {
     await update({ ...data, executionMode: mode });
   };
 
-  const setOutputFormat = async (outputFormatId: number) => {
+  const setOutputFormat = async (outputFormatId: string) => {
     if (!data) return;
     await update({ ...data, outputFormatId });
   };

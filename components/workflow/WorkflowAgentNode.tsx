@@ -4,7 +4,7 @@ import { Handle, Position, type NodeProps } from '@xyflow/react';
 import type { Node } from '@xyflow/react';
 import { useWorkflowFlow } from './WorkflowFlowContext';
 
-export type WorkflowAgentNode = Node<{ nome: string; stepNumber: number; color: string; agentId: number }, 'workflowAgent'>;
+export type WorkflowAgentNode = Node<{ nome: string; stepNumber: number; color: string; agentId: string; isRoot: boolean }, 'workflowAgent'>;
 
 export default function WorkflowAgentNode({ data }: NodeProps<WorkflowAgentNode>) {
   const { onEditAgent, onDeleteAgent, onAddChildAgent } = useWorkflowFlow();
@@ -80,7 +80,7 @@ export default function WorkflowAgentNode({ data }: NodeProps<WorkflowAgentNode>
           >
             <i className="bi bi-pencil"></i>
           </button>
-          {data.agentId !== 1 && (
+          {!data.isRoot && (
             <button
               className="btn btn-sm p-0"
               style={{ color: '#ff4757', fontSize: '13px', lineHeight: 1 }}

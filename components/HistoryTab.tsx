@@ -51,10 +51,10 @@ export default function HistoryTab() {
         error={error?.message ?? null}
         loadingMessage="Carregando histórico..."
       >
-        {filtered.map((h, idx) => (
+        {filtered.map((h) => (
         <div
           className="history-item d-flex align-items-center justify-content-between flex-wrap gap-2"
-          key={idx}
+          key={h.id}
         >
           <div className="d-flex align-items-center gap-3">
             <i className="bi bi-github" style={{ fontSize: '18px', color: '#6c5ce7' }}></i>

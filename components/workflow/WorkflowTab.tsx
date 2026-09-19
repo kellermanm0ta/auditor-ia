@@ -13,17 +13,17 @@ export default function WorkflowTab() {
   const { data: agents, error, isLoading, createAgent, updateAgent, deleteAgent } = useWorkflowAgents();
   const [showModal, setShowModal] = useState(false);
   const [editingAgent, setEditingAgent] = useState<WorkflowAgent | null>(null);
-  const [parentAgentId, setParentAgentId] = useState<number | null>(null);
+  const [parentAgentId, setParentAgentId] = useState<string | null>(null);
   const [deletingAgent, setDeletingAgent] = useState<WorkflowAgent | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  const handleAddChildAgent = useCallback((agentId: number) => {
+  const handleAddChildAgent = useCallback((agentId: string) => {
     setEditingAgent(null);
     setParentAgentId(agentId);
     setShowModal(true);
   }, []);
 
-  const handleEditAgent = useCallback((agentId: number) => {
+  const handleEditAgent = useCallback((agentId: string) => {
     const agent = (agents ?? []).find((a) => a.id === agentId);
     if (agent) {
       setEditingAgent(agent);
@@ -32,7 +32,7 @@ export default function WorkflowTab() {
     }
   }, [agents]);
 
-  const handleDeleteAgent = useCallback((agentId: number) => {
+  const handleDeleteAgent = useCallback((agentId: string) => {
     const agent = (agents ?? []).find((a) => a.id === agentId);
     if (agent) {
       setDeletingAgent(agent);
