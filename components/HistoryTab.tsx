@@ -71,7 +71,6 @@ export default function HistoryTab() {
             <span className={`badge bg-opacity-25 border ${severityBorderClass(h.severity)}`}>
               {h.severity}
             </span>
-            <button className="btn btn-outline-primary btn-sm"><i className="bi bi-eye"></i></button>
           </div>
         </div>
       ))}
