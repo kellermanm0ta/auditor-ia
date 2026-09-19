@@ -7,6 +7,9 @@ export interface Skill {
   prompt: string;
 }
 
+export type SkillInput = Omit<Skill, 'id'>;
+export type SkillCreateInput = Skill;
+
 export interface HistoryItem {
   repo: string;
   date: string;
