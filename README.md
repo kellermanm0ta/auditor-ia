@@ -12,20 +12,30 @@ git@github.com:kellermanm0ta/auditor-ia-backend.git
 ```
 
 Em desenvolvimento, o Next.js faz proxy de `/api/*` → `http://localhost:8000/api/*` (ver
-`next.config.ts`). Certifique-se de que o backend (e o banco via `auditoria-infra`) esteja rodando.
+`next.config.ts`). Certifique-se de que o backend, o banco e o Keycloak (via `../infra`)
+estejam rodando.
 
 > **IDs:** todos os identificadores (e chaves estrangeiras como `dependeDe` e `outputFormatId`)
 > são `string` geradas pelo backend. Ao criar registros, **omita o `id`** do corpo da requisição —
 > o backend gera e devolve o id no response.
 
+### Autenticação (Keycloak)
+
+O dashboard exige login OIDC antes de renderizar qualquer aba (`components/AuthGate.tsx`).
+Fluxo **Authorization Code + PKCE (S256)** via `oidc-client-ts` + `react-oidc-context`; o
+`UserManager` é criado no cliente (`lib/auth.ts`) a partir das variáveis `NEXT_PUBLIC_KEYCLOAK_*`
+(inlined no build). O access token é anexado como `Authorization: Bearer` em todas as chamadas de
+`lib/api.ts`.
+
 ### Funcionalidades
 
-- **Análise multi-agente** — executa agentes de IA especializados em paralelo ou em série
+- **Autenticação OIDC** — login via Keycloak (Authorization Code + PKCE); o access token é enviado em todas as chamadas à API
+- **Tela de análise** — informe um repositório e visualize um relatório de exemplo renderizado em Markdown (a execução real dos agentes ainda não está ligada ao backend)
 - **Skills customizáveis** — crie, edite e exclua skills, ative/desative cada uma e escreva prompts em Markdown com visualização renderizada
-- **Pipeline visual** — grafo interativo de agentes com arrasto, edição e exclusão de nós
+- **Pipeline visual** — grafo interativo de agentes (React Flow) com arrasto, edição e exclusão de nós
 - **Histórico de análises** — consulte resultados anteriores com busca
-- **Integrações CI/CD** — conecte com GitHub Actions, GitLab CI, Jenkins, webhooks e CLI
-- **Tema escuro** — interface moderna com Bootstrap 5 em dark mode
+- **Integrações CI/CD** — catálogo (GitHub Actions, GitLab CI, Jenkins, webhook, CLI, Slack) com passos e snippets copiáveis
+- **Tema claro/escuro** — interface Bootstrap 5 com alternância de tema
 
 ### Skills disponíveis
 
@@ -43,6 +53,8 @@ Em desenvolvimento, o Next.js faz proxy de `/api/*` → `http://localhost:8000/a
 
 - **Node.js** versão 18 ou superior
 - **npm** (acompanha o Node.js) ou **yarn** / **pnpm**
+- **Keycloak + PostgreSQL** — orquestrados por `../infra` (`docker compose up -d postgres keycloak`).
+  O app exige login OIDC e a API responde `401` sem token.
 
 ## Como executar
 
@@ -54,11 +66,18 @@ Em desenvolvimento, o Next.js faz proxy de `/api/*` → `http://localhost:8000/a
 # 1. Instalar as dependências
 npm install
 
-# 2. Iniciar o servidor de desenvolvimento
+# 2. Configurar o ambiente (modelo com as variáveis do Keycloak)
+cp .env.example .env.local
+
+# 3. Subir Keycloak + PostgreSQL (a partir de ../infra)
+cd ../infra && docker compose up -d postgres keycloak && cd ../frontend
+
+# 4. Iniciar o servidor de desenvolvimento
 npm run dev
 ```
 
-3. Abra [http://localhost:3000](http://localhost:3000) no navegador.
+5. Abra [http://localhost:3000](http://localhost:3000) no navegador. O app redireciona para o
+   Keycloak (`http://localhost:8080`): faça login com um usuário do realm `auditoria`.
 
 ### Passo a passo (Linux)
 
@@ -71,6 +90,12 @@ node --version   # deve ser >= 18
 
 # Clonar o projeto e entrar no diretório
 cd auditor-ia
+
+# Configurar o ambiente (Keycloak)
+cp .env.example .env.local
+
+# Subir Keycloak + PostgreSQL (repositório infra/)
+cd ../infra && docker compose up -d postgres keycloak && cd ../frontend
 
 # Instalar dependências
 npm install
@@ -89,14 +114,17 @@ npm run dev
 cd C:\caminho\para\auditor-ia
 ```
 
-4. Instale as dependências e inicie:
+4. Configure o ambiente (`Copy-Item .env.example .env.local`) e garanta Keycloak + PostgreSQL no ar
+   (`cd ..\infra; docker compose up -d postgres keycloak`).
+
+5. Instale as dependências e inicie:
 
 ```powershell
 npm install
 npm run dev
 ```
 
-5. Acesse `http://localhost:3000`
+6. Acesse `http://localhost:3000` e faça login pelo Keycloak.
 
 ### Comandos úteis
 
@@ -111,11 +139,13 @@ npm run dev
 
 - **Next.js 16** — framework React com App Router
 - **React 19** — biblioteca de UI
-- **Bootstrap 5.3** — framework CSS (dark theme)
+- **react-router-dom** — roteamento SPA (client-side)
+- **Bootstrap 5.3** — framework CSS (tema claro/escuro)
 - **Bootstrap Icons** — ícones
-- **react-markdown** — renderização de markdown
+- **react-markdown** + **remark-gfm** — renderização de markdown (com tabelas)
 - **SWR** — data fetching e cache (stale-while-revalidate)
 - **@xyflow/react** — grafo de workflow interativo (drag, zoom, nós customizados)
+- **oidc-client-ts** + **react-oidc-context** — autenticação OIDC/Keycloak
 - **TypeScript** — tipagem estática
 
 ## Estrutura do projeto
@@ -126,8 +156,10 @@ auditor-ia/
 │   ├── [[...slug]]/
 │   │   └── page.tsx       # Entrada que monta o react-router
 │   ├── globals.css        # Estilos globais
-│   └── layout.tsx         # Layout raiz com Bootstrap
+│   ├── layout.tsx         # Layout raiz com Bootstrap
+│   └── providers.tsx      # Providers client-side (OIDC/Keycloak)
 ├── components/
+│   ├── AuthGate.tsx           # Gate de autenticação OIDC
 │   ├── config/
 │   │   ├── ConfigFormatoSaida.tsx   # Card formato de saída
 │   │   ├── ConfigModoExecucao.tsx   # Card modo de execução
@@ -160,7 +192,8 @@ auditor-ia/
 │   ├── useOutputFormats.ts    # Fetch dos formatos de saída (/api/output-formats)
 │   └── useWorkflowAgents.ts   # Fetch + CRUD de agentes (/api/workflow-agents)
 ├── lib/
-│   ├── api.ts                 # Fetcher/Putter/Poster/Deleter genéricos
+│   ├── api.ts                 # Fetcher/Putter/Poster/Deleter genéricos + authHeaders
+│   ├── auth.ts                # UserManager OIDC (Keycloak)
 │   ├── routes.tsx             # Rotas do app (react-router)
 │   ├── types.ts               # Tipos TypeScript compartilhados
 │   └── workflowLayout.ts      # Conversão de agentes → nós/arestas ReactFlow
